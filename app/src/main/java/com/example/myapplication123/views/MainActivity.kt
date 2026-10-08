@@ -6,19 +6,27 @@ import android.util.Patterns
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.myapplication123.R
+import com.google.firebase.auth.FirebaseAuth
 
 // Pantalla principal de inicio de sesión
 class MainActivity : AppCompatActivity() {
+
+    // Instancia de Firebase Authentication
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
+
+        // Inicialización de FirebaseAuth
+        auth = FirebaseAuth.getInstance()
 
         // Ajusta los márgenes de la vista según las barras del sistema (Edge to Edge)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -37,12 +45,9 @@ class MainActivity : AppCompatActivity() {
             val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
+            // Valida los campos antes de cualquier intento con Firebase
             if (validarCampos(etEmail, etPassword, email, password)) {
-                // Navega a Bienvenida enviando el email por Intent
-                val intent = Intent(this, BienvenidaActivity::class.java).apply {
-                    putExtra("EXTRA_EMAIL", email)
-                }
-                startActivity(intent)
+                iniciarSesionConFirebase(email, password)
             }
         }
 
@@ -51,6 +56,27 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RegistroActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    // Inicia sesión en FirebaseAuth con email y contraseña
+    private fun iniciarSesionConFirebase(email: String, password: String) {
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show()
+
+                    // Navega a Bienvenida enviando el email por Intent
+                    val intent = Intent(this, BienvenidaActivity::class.java).apply {
+                        putExtra("EXTRA_EMAIL", email)
+                    }
+                    startActivity(intent)
+                    finish()
+                } else {
+                    // En caso de error (credenciales incorrectas u otros), muestra el mensaje y permanece en Login
+                    val errorMessage = task.exception?.localizedMessage ?: "Error de autenticación"
+                    Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     // Valida que el email tenga formato válido con @ y dominio, y que la contraseña cumpla el mínimo
