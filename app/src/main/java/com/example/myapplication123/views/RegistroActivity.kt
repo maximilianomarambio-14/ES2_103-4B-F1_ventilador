@@ -42,6 +42,12 @@ class RegistroActivity : AppCompatActivity() {
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val btnRegister = findViewById<Button>(R.id.btnRegister)
+        val btnVolver = findViewById<Button>(R.id.btnVolver)
+
+        // Botón para volver a la pantalla de Login
+        btnVolver.setOnClickListener {
+            finish()
+        }
 
         // Acción al presionar el botón de registro
         btnRegister.setOnClickListener {

@@ -12,6 +12,7 @@ import com.example.myapplication123.models.RegistroVentilador
 // Adaptador para mostrar la lista de registros en el RecyclerView
 class RegistroAdapter(
     private val listaRegistros: MutableList<RegistroVentilador>,
+    private val onItemClick: (RegistroVentilador) -> Unit,
     private val onEliminarClick: (RegistroVentilador, Int) -> Unit
 ) : RecyclerView.Adapter<RegistroAdapter.RegistroViewHolder>() {
 
@@ -35,10 +36,23 @@ class RegistroAdapter(
         holder.tvAmbienteTemperatura.text = "${registro.ambiente}: ${registro.temperatura} °C"
         holder.tvEstadoFecha.text = "Ventilador: $estadoVentilador  ${registro.fechaHora}"
 
+        // Clic en la fila completa para editar
+        holder.itemView.setOnClickListener {
+            onItemClick(registro)
+        }
+
+        // Clic en el botón eliminar
         holder.btnEliminar.setOnClickListener {
             onEliminarClick(registro, position)
         }
     }
 
     override fun getItemCount(): Int = listaRegistros.size
+
+    // Actualiza la lista completa de registros y notifica al RecyclerView
+    fun actualizarLista(nuevaLista: List<RegistroVentilador>) {
+        listaRegistros.clear()
+        listaRegistros.addAll(nuevaLista)
+        notifyDataSetChanged()
+    }
 }

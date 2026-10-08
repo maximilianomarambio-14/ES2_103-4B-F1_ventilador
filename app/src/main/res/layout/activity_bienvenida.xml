@@ -41,7 +41,14 @@
             android:id="@+id/btnLista"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Lista" />
+            android:text="Lista"
+            android:layout_marginBottom="16dp" />
+
+        <Button
+            android:id="@+id/btnCerrarSesion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cerrar sesión" />
 
     </LinearLayout>
 </ScrollView>

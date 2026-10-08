@@ -2,6 +2,7 @@ package com.example.myapplication123.views
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.Spinner
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -25,6 +26,12 @@ class PreferenciasActivity : AppCompatActivity() {
         }
 
         val spinnerAmbientes = findViewById<Spinner>(R.id.spinnerAmbientes)
+        val btnVolver = findViewById<Button>(R.id.btnVolver)
+
+        // Botón para volver a la pantalla anterior
+        btnVolver.setOnClickListener {
+            finish()
+        }
 
         // Inicialización y carga de opciones para el selector de ambientes
         configurarSpinnerAmbientes(spinnerAmbientes)
